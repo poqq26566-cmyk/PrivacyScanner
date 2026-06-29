@@ -1,1 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Droid SCEP</string>
+    <string name="title_activity_main">Droid SCEP</string>
+    
+    <string name="title_scep">SCEP</string>
+    <string name="title_monitor">监控</string>
+    <string name="title_tools">工具</string>
+
+    <string name="heading_general_settings">常规设置</string>
+    <string name="label_scep_server_url">SCEP 服务器 URL</string>
+    <string name="label_output">输出</string>
+    <string name="option_import_keystore">导入到 Android 密钥库</string>
+    <string name="option_save_file">保存到文件</string>
+    <string name="label_password">密钥库/文件密码 (可选)</string>
+    
+    <string name="heading_new_request">新建请求</string>
+    <string name="label_ca_fingerprint">CA 指纹 (MD5) (可选)</string>
+    <string name="label_subject_dn">主题唯一名称 (Subject DN)</string>
+    <string name="label_upn">用户主体名称 (UPN)</string>
+    <string name="label_challenge">注册挑战口令 (Challenge)</string>
+    <string name="label_profile">注册配置文件 (可选)</string>
+    <string name="label_keysize">密钥大小</string>
+    <string name="btn_send_request">发送请求</string>
+
+    <string name="heading_poll_request">轮询挂起的请求</string>
+    <string name="label_transaction_id">事务 ID (Transaction ID)</string>
+    <string name="btn_poll_certificate">轮询证书</string>
+
+    <string name="label_certs_to_monitor">要监控的证书 (每行一个别名)</string>
+    <string name="btn_add">添加...</string>
+    <string name="label_days_before_warning">过期前警告天数</string>
+    <string name="btn_notification_permission">通知权限...</string>
+
+    <string name="heading_generate_csr">生成证书签名请求 (CSR)</string>
+    <string name="label_rfc822">RFC 822 名称</string>
+    <string name="label_pem_key">PEM 密钥文件</string>
+    <string name="label_csr_file">CSR 文件</string>
+    <string name="btn_choose">选择...</string>
+    <string name="btn_generate_csr">生成 CSR</string>
+    
+    <string name="heading_convert_pem">转换 PEM 证书和密钥为 PKCS12</string>
+    <string name="label_pem_cert">PEM 证书文件</string>
+    <string name="label_password_p12">PKCS12 容器密码</string>
+    <string name="btn_save_p12">保存为 .p12/.pfx</string>
+</resources>
 
