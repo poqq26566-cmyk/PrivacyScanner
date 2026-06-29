@@ -1,22 +1,22 @@
 <resources>
-    <string name="app_name">PrivacyScanner</string>
-    <string name="scanning_installed_apps_please_wait">Scanning installed apps, please wait…</string>
-    <string name="scanning_action_label">Scanning… (%1$d/%2$d)</string>
+    <string name="app_name">隐私扫描器</string>
+    <string name="scanning_installed_apps_please_wait">正在扫描已安装的应用，请稍候…</string>
+    <string name="scanning_action_label">扫描中… (%1$d/%2$d)</string>
     <plurals name="showing_apps_label">
-        <item quantity="one">Showing %1$d app</item>
-        <item quantity="other">Showing %1$d apps</item>
+        <item quantity="one">显示 %1$d 个应用</item>
+        <item quantity="other">显示 %1$d 个应用</item>
     </plurals>
     <string name="textview_showing_risk">%1$s  %2$s</string>
-    <string name="textview_source">Source: %1$s</string>
-    <string name="textview_reason">Reason: %1$s</string>
-    <string name="textview_no_permissions_found">No permissions found.</string>
+    <string name="textview_source">来源：%1$s</string>
+    <string name="textview_reason">原因：%1$s</string>
+    <string name="textview_no_permissions_found">未找到权限。</string>
     <string name="textview_risk_text">%1$s %2$s</string>
-    <string name="textview_source_text">Source: %1$s</string>
-    <string name="textview_reason_text">Reason: %1$s</string>
-    <string name="app_icon_content_description">App icon</string>
-    <string name="info_more_options_content_description">More options</string>
-    <string name="button_scan_apps_text">Scan Apps</string>
-    <string name="button_open_website_text">Open Website</string>
-    <string name="checkbox_show_system_apps_text">Show system apps</string>
-    <string name="textview_scanning_apps_text">Scanning apps…</string>
+    <string name="textview_source_text">来源：%1$s</string>
+    <string name="textview_reason_text">原因：%1$s</string>
+    <string name="app_icon_content_description">应用图标</string>
+    <string name="info_more_options_content_description">更多选项</string>
+    <string name="button_scan_apps_text">扫描应用</string>
+    <string name="button_open_website_text">打开网站</string>
+    <string name="checkbox_show_system_apps_text">显示系统应用</string>
+    <string name="textview_scanning_apps_text">正在扫描应用…</string>
 </resources>
