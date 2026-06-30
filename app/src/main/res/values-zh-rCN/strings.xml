@@ -1,47 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Droid SCEP</string>
-    <string name="title_activity_main">Droid SCEP</string>
-    
-    <string name="title_scep">SCEP</string>
-    <string name="title_monitor">监控</string>
-    <string name="title_tools">工具</string>
+    <!-- 应用名称 -->
+    <string name="app_name">隐私扫描器</string>
 
-    <string name="heading_general_settings">常规设置</string>
-    <string name="label_scep_server_url">SCEP 服务器 URL</string>
-    <string name="label_output">输出</string>
-    <string name="option_import_keystore">导入到 Android 密钥库</string>
-    <string name="option_save_file">保存到文件</string>
-    <string name="label_password">密钥库/文件密码 (可选)</string>
-    
-    <string name="heading_new_request">新建请求</string>
-    <string name="label_ca_fingerprint">CA 指纹 (MD5) (可选)</string>
-    <string name="label_subject_dn">主题唯一名称 (Subject DN)</string>
-    <string name="label_upn">用户主体名称 (UPN)</string>
-    <string name="label_challenge">注册挑战口令 (Challenge)</string>
-    <string name="label_profile">注册配置文件 (可选)</string>
-    <string name="label_keysize">密钥大小</string>
-    <string name="btn_send_request">发送请求</string>
+    <!-- 主界面 -->
+    <string name="scanning_installed_apps_please_wait">正在扫描已安装的应用，请稍候…</string>
+    <string name="scanning_action_label">扫描中… (%1$d/%2$d)</string>
+    <plurals name="showing_apps_label">
+        <item quantity="one">显示 %1$d 个应用</item>
+        <item quantity="other">显示 %1$d 个应用</item>
+    </plurals>
+    <string name="button_scan_apps_text">扫描应用</string>
+    <string name="button_open_website_text">打开网站</string>
+    <string name="checkbox_show_system_apps_text">显示系统应用</string>
+    <string name="textview_scanning_apps_text">正在扫描应用…</string>
+    <string name="toast_scan_completed">✅ 扫描完成：共 %1$d 个应用</string>
 
-    <string name="heading_poll_request">轮询挂起的请求</string>
-    <string name="label_transaction_id">事务 ID (Transaction ID)</string>
-    <string name="btn_poll_certificate">轮询证书</string>
+    <!-- 弹出菜单 -->
+    <string name="menu_view_source">🔗 查看源代码</string>
+    <string name="menu_report_issue">🐞 报告问题</string>
+    <string name="menu_donate">💖 捐赠/支持</string>
 
-    <string name="label_certs_to_monitor">要监控的证书 (每行一个别名)</string>
-    <string name="btn_add">添加...</string>
-    <string name="label_days_before_warning">过期前警告天数</string>
-    <string name="btn_notification_permission">通知权限...</string>
+    <!-- 图标描述（无障碍） -->
+    <string name="app_icon_content_description">应用图标</string>
+    <string name="info_more_options_content_description">更多选项</string>
+    <string name="label_app_icon">应用图标</string>
 
-    <string name="heading_generate_csr">生成证书签名请求 (CSR)</string>
-    <string name="label_rfc822">RFC 822 名称</string>
-    <string name="label_pem_key">PEM 密钥文件</string>
-    <string name="label_csr_file">CSR 文件</string>
-    <string name="btn_choose">选择...</string>
-    <string name="btn_generate_csr">生成 CSR</string>
-    
-    <string name="heading_convert_pem">转换 PEM 证书和密钥为 PKCS12</string>
-    <string name="label_pem_cert">PEM 证书文件</string>
-    <string name="label_password_p12">PKCS12 容器密码</string>
-    <string name="btn_save_p12">保存为 .p12/.pfx</string>
+    <!-- 应用详情界面 -->
+    <string name="textview_showing_risk">%1$s  %2$s</string>
+    <string name="textview_source">来源：%1$s</string>
+    <string name="textview_reason">原因：%1$s</string>
+    <string name="textview_no_permissions_found">未找到权限。</string>
+    <string name="textview_risk_text">%1$s %2$s</string>
+    <string name="textview_source_text">来源：%1$s</string>
+    <string name="textview_reason_text">原因：%1$s</string>
+    <string name="default_risk_label">🟢 安全</string>
+    <string name="default_source_label">来源：未知</string>
+    <string name="default_reason_label">原因：暂无更多信息</string>
+    <string name="permissions_title">权限列表：</string>
+    <string name="permissions_subtitle">（基于已授予的权限）</string>
+    <string name="permissions_header">权限列表：\n\n</string>
+    <string name="permission_status_allowed">（已授权）</string>
+    <string name="permission_status_denied">（未授权）</string>
+    <string name="button_open_app_settings">打开应用设置</string>
+    <string name="button_trust_app">信任此应用</string>
+    <string name="button_untrust_app">取消信任</string>
+    <string name="toast_no_package">未提供应用包名</string>
+    <string name="toast_app_trusted">%1$s 已标记为信任</string>
+    <string name="toast_app_untrusted">%1$s 已取消信任</string>
+    <string name="source_unknown">未知</string>
+    <string name="reason_no_context">暂无更多信息</string>
 </resources>
-
