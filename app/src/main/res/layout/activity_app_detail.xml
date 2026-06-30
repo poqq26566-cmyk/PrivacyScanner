@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:padding="10dp">
 
-        <!-- 🔹 App info card -->
         <LinearLayout
             android:id="@+id/headerCard"
             android:layout_width="match_parent"
@@ -30,7 +29,7 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_gravity="center_vertical"
-                android:contentDescription="App Icon"
+                android:contentDescription="@string/label_app_icon"
                 android:scaleType="centerInside"
                 android:src="@mipmap/ic_launcher" />
 
@@ -59,7 +58,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- 🟩 Risk Info Card -->
         <LinearLayout
             android:id="@+id/riskInfoCard"
             android:layout_width="match_parent"
@@ -74,7 +72,7 @@
                 android:id="@+id/tvRisk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🟢 Safe"
+                android:text="@string/default_risk_label"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"
@@ -84,7 +82,7 @@
                 android:id="@+id/tvSource"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Source: Unknown"
+                android:text="@string/default_source_label"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="13sp"
                 android:paddingBottom="2dp" />
@@ -93,19 +91,18 @@
                 android:id="@+id/tvReason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Reason: No additional context"
+                android:text="@string/default_reason_label"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="13sp"
                 android:fontFamily="sans-serif-light"
                 android:textStyle="italic" />
         </LinearLayout>
 
-        <!-- 🔸 Permissions Section -->
         <TextView
             android:id="@+id/tvPermissionsTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Permissions:"
+            android:text="@string/permissions_title"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="?android:attr/textColorPrimary"
@@ -116,7 +113,7 @@
             android:id="@+id/tvPermissionsSubTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="(Based on granted permissions)"
+            android:text="@string/permissions_subtitle"
             android:textSize="12sp"
             android:textColor="?android:attr/textColorSecondary"
             android:layout_marginBottom="8dp" />
@@ -136,12 +133,11 @@
             android:background="@android:color/darker_gray"
             android:layout_marginBottom="8dp" />
 
-        <!-- 🔘 Buttons -->
         <Button
             android:id="@+id/btnSettings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Open App Settings"
+            android:text="@string/button_open_app_settings"
             android:backgroundTint="@color/purple_700"
             android:textColor="@android:color/white"
             android:layout_marginBottom="8dp"
@@ -151,7 +147,7 @@
             android:id="@+id/btnTrust"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trust This App"
+            android:text="@string/button_trust_app"
             android:backgroundTint="@color/teal_700"
             android:textColor="@android:color/white"
             android:elevation="2dp"
