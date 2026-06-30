@@ -23,6 +23,63 @@ import androidx.core.content.edit
 
 class AppDetailActivity : BaseActivity() {
 
+    // 🈶 常见权限的中文说明对照表
+    private val permissionTranslations = mapOf(
+        "READ_SMS" to "读取短信",
+        "SEND_SMS" to "发送短信",
+        "RECEIVE_SMS" to "接收短信",
+        "READ_CONTACTS" to "读取联系人",
+        "WRITE_CONTACTS" to "修改联系人",
+        "RECORD_AUDIO" to "录音",
+        "RECORD_VIDEO" to "录制视频",
+        "CALL_PHONE" to "拨打电话",
+        "READ_CALL_LOG" to "读取通话记录",
+        "WRITE_CALL_LOG" to "修改通话记录",
+        "READ_CALENDAR" to "读取日历",
+        "WRITE_CALENDAR" to "修改日历",
+        "ACCESS_FINE_LOCATION" to "精确定位",
+        "ACCESS_COARSE_LOCATION" to "大致定位",
+        "ACCESS_BACKGROUND_LOCATION" to "后台定位",
+        "CAMERA" to "使用摄像头",
+        "READ_EXTERNAL_STORAGE" to "读取存储空间",
+        "WRITE_EXTERNAL_STORAGE" to "写入存储空间",
+        "READ_MEDIA_IMAGES" to "读取图片",
+        "READ_MEDIA_VIDEO" to "读取视频",
+        "READ_MEDIA_AUDIO" to "读取音频",
+        "QUERY_ALL_PACKAGES" to "查看已安装应用列表",
+        "READ_PHONE_STATE" to "读取设备信息",
+        "BODY_SENSORS" to "读取身体传感器",
+        "ACCESS_WIFI_STATE" to "查看 Wi-Fi 状态",
+        "ACCESS_NETWORK_STATE" to "查看网络状态",
+        "INTERNET" to "访问互联网",
+        "VIBRATE" to "控制震动",
+        "FOREGROUND_SERVICE" to "运行前台服务",
+        "FOREGROUND_SERVICE_DATA_SYNC" to "前台数据同步服务",
+        "FOREGROUND_SERVICE_SPECIAL_USE" to "前台特殊用途服务",
+        "BLUETOOTH" to "使用蓝牙",
+        "NFC" to "使用 NFC",
+        "POST_NOTIFICATIONS" to "发送通知",
+        "RECEIVE_BOOT_COMPLETED" to "开机自启动",
+        "WAKE_LOCK" to "保持设备唤醒",
+        "EXPAND_STATUS_BAR" to "展开状态栏",
+        "READ_APP_SPECIFIC_LOCALES" to "读取应用语言设置",
+        "REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" to "忽略电池优化",
+        "SET_ALARM" to "设置闹钟",
+        "SCHEDULE_EXACT_ALARM" to "设置精确闹钟",
+        "USE_BIOMETRIC" to "使用生物识别",
+        "USE_FINGERPRINT" to "使用指纹识别",
+        "MANAGE_EXTERNAL_STORAGE" to "管理所有文件",
+        "SYSTEM_ALERT_WINDOW" to "悬浮窗显示"
+    )
+
+    private fun translatePermission(perm: String): String {
+        val shortName = perm.substringAfterLast(".")
+        val translation = permissionTranslations.entries.firstOrNull {
+            shortName.uppercase().contains(it.key)
+        }?.value
+        return if (translation != null) "$perm（$translation）" else perm
+    }
+
     private lateinit var tvRisk: TextView
     private lateinit var tvSource: TextView
     private lateinit var tvReason: TextView
@@ -46,7 +103,7 @@ class AppDetailActivity : BaseActivity() {
 
         pkgName = intent.getStringExtra("PACKAGE_NAME") ?: ""
         if (pkgName.isBlank()) {
-            Toast.makeText(this, "No package provided", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_no_package), Toast.LENGTH_SHORT).show()
             finish()
             return
         }
@@ -61,7 +118,6 @@ class AppDetailActivity : BaseActivity() {
             Log.w("AppDetailActivity", "Package not found: $pkgName", e)
         }
 
-        // 🔹 Fetch granted permissions
         val grantedPermissions = mutableListOf<String>()
         val grantedMap = mutableMapOf<String, Boolean>()
         try {
@@ -79,17 +135,16 @@ class AppDetailActivity : BaseActivity() {
             Log.e("AppDetailActivity", "Failed to load permissions for $pkgName", e)
         }
 
-        // 🔹 Calculate risk (includes reason)
         val (risk, sourceReason) = RiskCalculator.calculate(this, pkgName, grantedPermissions)
         val splitInfo = sourceReason.split("•", limit = 2)
-        val source = splitInfo.getOrNull(0)?.trim() ?: "Unknown"
-        val reason = splitInfo.getOrNull(1)?.trim() ?: "No additional context"
+        val source = splitInfo.getOrNull(0)?.trim() ?: getString(R.string.source_unknown)
+        val reason = splitInfo.getOrNull(1)?.trim() ?: getString(R.string.reason_no_context)
 
         val riskEmoji = when {
-            risk.contains("High", true) -> "🔴"
-            risk.contains("Medium", true) -> "🟠"
-            risk.contains("Low", true) -> "🟡"
-            risk.contains("Safe", true) -> "🟢"
+            risk.contains("高风险", true) || risk.contains("High", true) -> "🔴"
+            risk.contains("中风险", true) || risk.contains("Medium", true) -> "🟠"
+            risk.contains("低风险", true) || risk.contains("Low", true) -> "🟡"
+            risk.contains("安全", true) || risk.contains("Safe", true) -> "🟢"
             else -> "⚪"
         }
 
@@ -102,7 +157,6 @@ class AppDetailActivity : BaseActivity() {
         applyRiskColor(risk, animate = false)
         updateTrustButton()
 
-        // 🔹 Highlight permissions
         val sb = SpannableStringBuilder()
         val highRiskKeywords = listOf(
             "READ_SMS", "SEND_SMS", "RECEIVE_SMS", "READ_CONTACTS",
@@ -113,11 +167,14 @@ class AppDetailActivity : BaseActivity() {
         if (grantedMap.isEmpty()) {
             tvPermissions.text = getString(R.string.textview_no_permissions_found)
         } else {
-            sb.append("Permissions:\n\n")
+            sb.append(getString(R.string.permissions_header))
             grantedMap.forEach { (perm, granted) ->
                 val start = sb.length
-                sb.append("• $perm ")
-                val statusText = if (granted) "(Allowed)" else "(Not allowed)"
+                sb.append("• ${translatePermission(perm)} ")
+                val statusText = if (granted)
+                    getString(R.string.permission_status_allowed)
+                else
+                    getString(R.string.permission_status_denied)
                 val statusColor = if (granted)
                     "#4CAF50".toColorInt()
                 else
@@ -141,7 +198,6 @@ class AppDetailActivity : BaseActivity() {
             tvPermissions.text = sb
         }
 
-        // 🔹 Buttons
         btnSettings.setOnClickListener {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                 data = "package:$pkgName".toUri()
@@ -154,20 +210,20 @@ class AppDetailActivity : BaseActivity() {
             val trusted = prefs.getBoolean(pkgName, false)
             if (trusted) {
                 prefs.edit { remove(pkgName) }
-                Toast.makeText(this, "$appLabel removed from Trusted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.toast_app_untrusted, appLabel), Toast.LENGTH_SHORT).show()
             } else {
                 prefs.edit { putBoolean(pkgName, true) }
-                Toast.makeText(this, "$appLabel marked as Trusted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.toast_app_trusted, appLabel), Toast.LENGTH_SHORT).show()
             }
 
             val (newRisk, newSourceReason) = RiskCalculator.calculate(this, pkgName, grantedPermissions)
             val newSplit = newSourceReason.split("•", limit = 2)
             tvRisk.text = getString(R.string.textview_risk_text, riskEmoji, newRisk)
             tvSource.text =
-                getString(R.string.textview_source_text, newSplit.getOrNull(0)?.trim() ?: "Unknown")
+                getString(R.string.textview_source_text, newSplit.getOrNull(0)?.trim() ?: getString(R.string.source_unknown))
             tvReason.text = getString(
                 R.string.textview_reason_text,
-                newSplit.getOrNull(1)?.trim() ?: "No context"
+                newSplit.getOrNull(1)?.trim() ?: getString(R.string.reason_no_context)
             )
 
             applyRiskColor(newRisk, animate = true)
@@ -178,38 +234,40 @@ class AppDetailActivity : BaseActivity() {
     private fun updateTrustButton() {
         val prefs = getSharedPreferences("trusted_apps", MODE_PRIVATE)
         val trusted = prefs.getBoolean(pkgName, false)
-        btnTrust.text = if (trusted) "Untrust This App" else "Trust This App"
+        btnTrust.text = if (trusted)
+            getString(R.string.button_untrust_app)
+        else
+            getString(R.string.button_trust_app)
     }
 
-    // 🟩 Guaranteed correct & distinct color mapping + animation
     private fun applyRiskColor(risk: String, animate: Boolean) {
         val label = risk.lowercase()
         val colorText: Int
         val colorCard: Int
 
         when {
-            label.contains("high") -> {
-                colorText = "#FF5252".toColorInt() // red
+            label.contains("高风险") || label.contains("high") -> {
+                colorText = "#FF5252".toColorInt()
                 colorCard = "#33FF5252".toColorInt()
             }
-            label.contains("medium") -> {
-                colorText = "#FFA000".toColorInt() // orange
+            label.contains("中风险") || label.contains("medium") -> {
+                colorText = "#FFA000".toColorInt()
                 colorCard = "#33FFA000".toColorInt()
             }
-            label.contains("low") -> {
-                colorText = "#FFEB3B".toColorInt() // yellow
+            label.contains("低风险") || label.contains("low") -> {
+                colorText = "#FFEB3B".toColorInt()
                 colorCard = "#33FFEB3B".toColorInt()
             }
-            label.contains("safe") -> {
-                colorText = "#00C853".toColorInt() // ✅ pure green (brighter)
+            label.contains("安全") || label.contains("safe") -> {
+                colorText = "#00C853".toColorInt()
                 colorCard = "#3300C853".toColorInt()
             }
-            label.contains("trusted") -> {
-                colorText = "#2196F3".toColorInt() // blue
+            label.contains("信任") || label.contains("trusted") -> {
+                colorText = "#2196F3".toColorInt()
                 colorCard = "#332196F3".toColorInt()
             }
             else -> {
-                colorText = "#9E9E9E".toColorInt() // gray
+                colorText = "#9E9E9E".toColorInt()
                 colorCard = "#222222".toColorInt()
             }
         }
