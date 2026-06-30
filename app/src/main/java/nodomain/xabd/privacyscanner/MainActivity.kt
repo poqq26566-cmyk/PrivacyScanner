@@ -34,7 +34,6 @@ class MainActivity : BaseActivity() {
     private var allApps: List<AppInfo> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 🌙 Follow system dark mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -44,38 +43,32 @@ class MainActivity : BaseActivity() {
 
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updatePadding(
-                top = bars.top,
-                bottom = bars.bottom
-            )
+            view.updatePadding(top = bars.top, bottom = bars.bottom)
             insets
         }
 
-        // 🟪 Header title
         txtHeader = findViewById(R.id.txtHeader)
         txtHeader.text = getString(R.string.app_name)
 
-        // 🆕 Info icon (menu)
         ivInfo = findViewById(R.id.ivInfo)
         ivInfo.setOnClickListener {
             val popup = PopupMenu(this, ivInfo)
             popup.menu.apply {
-                add("🔗 View Source Code")
-                add("🐞 Report an Issue")
-                add("💖 Donate / Support")
+                add(getString(R.string.menu_view_source))
+                add(getString(R.string.menu_report_issue))
+                add(getString(R.string.menu_donate))
             }
             popup.setOnMenuItemClickListener { item ->
                 when (item.title) {
-                    "🔗 View Source Code" -> openLink("https://github.com/xabd/PrivacyScanner")
-                    "🐞 Report an Issue" -> openLink("https://github.com/xabd/PrivacyScanner/issues")
-                    "💖 Donate / Support" -> openLink("https://ko-fi.com/digitalescape")
+                    getString(R.string.menu_view_source) -> openLink("https://github.com/xabd/PrivacyScanner")
+                    getString(R.string.menu_report_issue) -> openLink("https://github.com/xabd/PrivacyScanner/issues")
+                    getString(R.string.menu_donate) -> openLink("https://ko-fi.com/digitalescape")
                 }
                 true
             }
             popup.show()
         }
 
-        // 🔹 UI setup
         btnScan = findViewById(R.id.btnScan)
         btnWebsite = findViewById(R.id.btnWebsite)
         recyclerView = findViewById(R.id.recyclerView)
@@ -101,8 +94,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun openLink(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-        startActivity(intent)
+        startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
     }
 
     private fun loadInstalledApps() {
@@ -124,31 +116,22 @@ class MainActivity : BaseActivity() {
                     val icon = pm.getApplicationIcon(app)
                     val isSystem = isSystemApp(app)
                     val grantedPermissions = getGrantedPermissions(pm, pkgName)
-
-                    val (risk, source) =
-                        RiskCalculator.calculate(this@MainActivity, pkgName, grantedPermissions)
-
-                    resultList.add(
-                        AppInfo(
-                            name = name,
-                            packageName = pkgName,
-                            permissions = grantedPermissions,
-                            riskLevel = risk,
-                            icon = icon,
-                            isSystemApp = isSystem,
-                            source = source
-                        )
-                    )
-
+                    val (risk, source) = RiskCalculator.calculate(this@MainActivity, pkgName, grantedPermissions)
+                    resultList.add(AppInfo(
+                        name = name,
+                        packageName = pkgName,
+                        permissions = grantedPermissions,
+                        riskLevel = risk,
+                        icon = icon,
+                        isSystemApp = isSystem,
+                        source = source
+                    ))
                     if (index % 15 == 0) {
                         withContext(Dispatchers.Main) {
-                            txtLoading.text =
-                                getString(R.string.scanning_action_label, index + 1, apps.size)
+                            txtLoading.text = getString(R.string.scanning_action_label, index + 1, apps.size)
                         }
                     }
-
-                } catch (_: Exception) {
-                }
+                } catch (_: Exception) {}
             }
 
             allApps = resultList
@@ -161,7 +144,7 @@ class MainActivity : BaseActivity() {
                 btnScan.isEnabled = true
                 Toast.makeText(
                     this@MainActivity,
-                    "✅ Scan completed: ${allApps.size} apps",
+                    getString(R.string.toast_scan_completed, allApps.size),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -190,26 +173,21 @@ class MainActivity : BaseActivity() {
     private fun filterApps() {
         val filtered = if (showSystemApps) allApps else allApps.filter { !it.isSystemApp }
         val sorted = filtered.sortedWith(
-            compareByDescending<AppInfo> { riskScore(it.riskLevel) }
-                .thenBy { it.name.lowercase() }
+            compareByDescending<AppInfo> { riskScore(it.riskLevel) }.thenBy { it.name.lowercase() }
         )
         appAdapter.updateData(sorted)
-        txtLoading.text = resources.getQuantityString(
-            R.plurals.showing_apps_label,
-            sorted.size,
-            sorted.size
-        )
+        txtLoading.text = resources.getQuantityString(R.plurals.showing_apps_label, sorted.size, sorted.size)
     }
 
     private fun isSystemApp(app: ApplicationInfo) =
         (app.flags and ApplicationInfo.FLAG_SYSTEM) != 0
 
     private fun riskScore(risk: String): Int = when {
-        risk.contains("high", true) -> 5
-        risk.contains("medium", true) -> 4
-        risk.contains("low", true) -> 3
-        risk.contains("safe", true) -> 2
-        risk.contains("trusted", true) -> 1
+        risk.contains("高风险", true) || risk.contains("high", true) -> 5
+        risk.contains("中风险", true) || risk.contains("medium", true) -> 4
+        risk.contains("低风险", true) || risk.contains("low", true) -> 3
+        risk.contains("安全", true) || risk.contains("safe", true) -> 2
+        risk.contains("信任", true) || risk.contains("trusted", true) -> 1
         else -> 0
     }
 }
