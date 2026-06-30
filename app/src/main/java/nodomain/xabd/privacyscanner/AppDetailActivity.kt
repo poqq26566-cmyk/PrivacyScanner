@@ -69,7 +69,58 @@ class AppDetailActivity : BaseActivity() {
         "USE_BIOMETRIC" to "使用生物识别",
         "USE_FINGERPRINT" to "使用指纹识别",
         "MANAGE_EXTERNAL_STORAGE" to "管理所有文件",
-        "SYSTEM_ALERT_WINDOW" to "悬浮窗显示"
+        "SYSTEM_ALERT_WINDOW" to "悬浮窗显示",
+        "AUTHENTICATE_ACCOUNTS" to "验证账户",
+        "BILLING" to "应用内购买",
+        "BIND_GET_INSTALL_REFERRER" to "获取安装来源",
+        "CONFIGURATOR_READ" to "读取配置",
+        "FOREGROUND_SERVICE_MICROPHONE" to "前台麦克风服务",
+        "AD_ID" to "广告 ID",
+        "READ_GSERVICES" to "读取 Google 服务配置",
+        "ACCESS_ADSERVICES_ATTRIBUTION" to "广告服务归因",
+        "BLUETOOTH_CONNECT" to "蓝牙连接",
+        "BLUETOOTH_ADVERTISE" to "蓝牙广播",
+        "BLUETOOTH_SCAN" to "蓝牙扫描",
+        "REORDER_TASKS" to "重新排序任务",
+        "REQUEST_INSTALL_PACKAGES" to "请求安装包",
+        "CAPTURE_KEYBOARD" to "捕获键盘输入",
+        "DOWNLOAD_WITHOUT_NOTIFICATION" to "静默下载",
+        "FOREGROUND_SERVICE_CAMERA" to "前台相机服务",
+        "FOREGROUND_SERVICE_MEDIA_PROJECTION" to "前台媒体投影服务",
+        "FOREGROUND_SERVICE_MEDIA_PLAYBACK" to "前台媒体播放服务",
+        "RUN_USER_INITIATED_JOBS" to "用户发起任务",
+        "GET_ACCOUNTS" to "获取账户",
+        "MANAGE_ACCOUNTS" to "管理账户",
+        "MODIFY_AUDIO_SETTINGS" to "修改音频设置",
+        "READ_MEDIA_VISUAL_USER_SELECTED" to "读取用户选择的多媒体",
+        "REPOSITION_SELF_WINDOWS" to "重定位自身窗口",
+        "REQUEST_FULLSCREEN_MODE" to "请求全屏模式",
+        "USE_CREDENTIALS" to "使用凭证",
+        "CREDENTIAL_MANAGER_QUERY_CANDIDATE_CREDENTIALS" to "查询候选凭证",
+        "CREDENTIAL_MANAGER_SET_ALLOWED_PROVIDERS" to "设置凭证提供者",
+        "CREDENTIAL_MANAGER_SET_ORIGIN" to "设置凭证来源",
+        "QUERY_ADVANCED_PROTECTION_MODE" to "查询高级保护模式",
+        "USE_LOOPBACK_INTERFACE" to "使用环回接口",
+        "SCENE_UNDERSTANDING_FINE" to "场景理解（精细）",
+        "HAND_TRACKING" to "手势追踪",
+        "C2D_MESSAGE" to "C2D 消息",
+        "READ_WRITE_BOOKMARK_FOLDERS" to "读写书签文件夹",
+        "TOS_ACKED" to "条款确认",
+        "DEVICE_EXTRAS" to "设备附加信息",
+        "RECEIVE" to "接收消息",
+        "INSTALL_SHORTCUT" to "创建快捷方式",
+        "CURRENT_ACCOUNT_ACCESS" to "当前账户访问",
+        "USE_PINNED_WINDOWING_LAYER" to "固定窗口层",
+        "SupplementaryDID_ACCESS" to "补充设备 ID",
+        "MSA_ACCESS" to "MSA 访问",
+        "BIND_SERVICE" to "绑定服务",
+        "PROCESS_PUSH_MSG" to "处理推送消息",
+        "PUSH_PROVIDER" to "推送提供者",
+        "FLASHLIGHT" to "闪光灯",
+        "HIGH_SAMPLING_RATE_SENSORS" to "高采样率传感器",
+        "DETECT_SCREEN_CAPTURE" to "检测屏幕捕获",
+        "READ_ATTRIBUTION" to "读取归因信息",
+        "MIPUSH_RECEIVE" to "小米推送接收"
     )
 
     private fun translatePermission(perm: String): String {
@@ -77,7 +128,7 @@ class AppDetailActivity : BaseActivity() {
         val translation = permissionTranslations.entries.firstOrNull {
             shortName.uppercase().contains(it.key)
         }?.value
-        return if (translation != null) "$perm（$translation）" else perm
+        return if (translation != null) "• $translation" else "• $shortName"
     }
 
     private lateinit var tvRisk: TextView
@@ -167,30 +218,21 @@ class AppDetailActivity : BaseActivity() {
         if (grantedMap.isEmpty()) {
             tvPermissions.text = getString(R.string.textview_no_permissions_found)
         } else {
-            sb.append(getString(R.string.permissions_header))
+            sb.append("权限列表：\n\n")
             grantedMap.forEach { (perm, granted) ->
+                val displayName = translatePermission(perm)
                 val start = sb.length
-                sb.append("• ${translatePermission(perm)} ")
-                val statusText = if (granted)
-                    getString(R.string.permission_status_allowed)
-                else
-                    getString(R.string.permission_status_denied)
-                val statusColor = if (granted)
-                    "#4CAF50".toColorInt()
-                else
-                    "#D32F2F".toColorInt()
-
-                val statusStart = sb.length
-                sb.append(statusText)
-                val statusEnd = sb.length
-
-                sb.setSpan(ForegroundColorSpan(statusColor), statusStart, statusEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                sb.append(displayName)
+                if (!granted) {
+                    sb.append("（未授权）")
+                }
+                val end = sb.length
 
                 val isHigh = highRiskKeywords.any { kw -> perm.uppercase().contains(kw) }
                 if (isHigh && granted) {
                     val highlightColor = ContextCompat.getColor(this, R.color.permissionHighlight)
-                    sb.setSpan(BackgroundColorSpan(highlightColor), start, statusEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    sb.setSpan(StyleSpan(Typeface.BOLD), start, statusEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    sb.setSpan(BackgroundColorSpan(highlightColor), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    sb.setSpan(StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
 
                 sb.append("\n")
